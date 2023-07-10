@@ -287,7 +287,7 @@ namespace Tetris
             igra.ShraniIgra();
             this.Close();
         }
-        // DIALOG BOX
+        // MESSAGE BOX
         /// <summary>
         /// Prikaže Dialog Box ob koncu igre.
         /// </summary>

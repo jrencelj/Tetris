@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Drawing;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
+using System.Data.SqlTypes;
 
 namespace Tetris
 {
     public class Igra
     {
         private string igralec;
-        private const string pot = @"rezultati.json";
+        private const string pot = @"rezultati.txt";
         private int tocke = 0;
         private bool igraKonec = false;
         private Color[,] obmocje;
@@ -85,11 +86,6 @@ namespace Tetris
                 naslednjaOblika = new Oblika(new Tocka(5, -2), oblikaTip);
             }
             return naslednjaOblika;
-        }
-
-        public void PonastaviIgro()
-        {
-
         }
 
         /// <summary>
@@ -179,54 +175,50 @@ namespace Tetris
         /// </summary>
         public void ShraniIgra()
         {
-            if (Tezavnost == "tezka" || Igralec != "")
+            if (!File.Exists(pot) && (Tezavnost == "tezka" && Igralec != ""))
+            {
+                using (StreamWriter sw = File.CreateText(pot))
+                {
+                    sw.WriteLine($"{Igralec},{Tocke}");
+                }
+            }
+            else if (File.Exists(pot) && (Tezavnost == "tezka" && Igralec != ""))
             {
                 List<Igralec> igralci = new List<Igralec>();
-                string json;
-                if (File.Exists(pot))
+                using (StreamReader sr = File.OpenText(pot))
                 {
-                    using (StreamReader sr = new StreamReader(pot))
+                    string vrstica = "";
+                    while ((vrstica = sr.ReadLine()) != null)
                     {
-                        string vsebina = sr.ReadToEnd();
-                        igralci = JsonSerializer.Deserialize<List<Igralec>>(vsebina);
-                    }
-                    igralci.Sort();
-                    Igralec igralec = new Igralec(Igralec, Tocke);
-                    if (igralci.Count == 10)
-                    {
-                        int zamenjaj = 10;
-                        for (int i = 0; i < igralci.Count; i++)
-                        {
-                            if (igralci[i].Tocke < igralec.Tocke)
-                            {
-                                zamenjaj = i;
-                                break;
-                            }
-                        }
-                        // Je primeren za seznam top 10.
-                        if (zamenjaj < 10)
-                        {
-                            igralci.Insert(zamenjaj, igralec);
-                            igralci = igralci.GetRange(0, 9);
-                            json = JsonSerializer.Serialize(igralci);
-                            File.WriteAllText(pot, json);
-                        }
-                    }
-                    // Na seznamu še ni 10 igralcev.
-                    else
-                    {
+                        string[] podatki = vrstica.Trim().Split(',');
+                        Igralec igralec = new Igralec(podatki[0], int.Parse(podatki[1]));
                         igralci.Add(igralec);
-                        json = JsonSerializer.Serialize(igralci);
-                        File.WriteAllText(pot, json);
                     }
-
-
+                }
+                igralci.Add(new Igralec(Igralec, Tocke));
+                igralci.Sort();
+                if (igralci.Count < 10)
+                {
+                    using (StreamWriter sw = File.CreateText(pot))
+                    {
+                        foreach (Igralec igralec in igralci)
+                        {
+                            sw.WriteLine($"{igralec.Ime},{igralec.Tocke}");
+                        }
+                    }
                 }
                 else
                 {
-                    igralci.Add(new Igralec(Igralec, Tocke));
-                    json = JsonSerializer.Serialize(igralci);
-                    File.WriteAllText(pot, json);
+                    using (StreamWriter sw = File.CreateText(pot))
+                    {
+                        int stevec = 0;
+                        while (stevec < 10)
+                        {
+                            Igralec igralec = igralci[stevec];
+                            sw.WriteLine($"{igralec.Ime},{igralec.Tocke}");
+                            stevec++;
+                        }
+                    }
                 }
             }
         }

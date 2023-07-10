@@ -7,15 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.IO;
 
 namespace Tetris
 {
     public partial class Rezultati : Form
     {
-        private const string pot = @"rezultati.json";
+        private const string pot = @"rezultati.txt";
         public Rezultati()
         {
             InitializeComponent();
@@ -23,19 +21,28 @@ namespace Tetris
 
         private void NaloziRezultate(object sender, EventArgs e)
         {
-            List<Igralec> igralci;
-            if (File.Exists(pot))
+            List<Igralec> igralci = new List<Igralec>();
+            try
             {
-                using (StreamReader sr = new StreamReader(pot))
+                StreamReader sr = new StreamReader(pot);
+                string vrstica = sr.ReadLine();
+                while (vrstica != null)
                 {
-                    string vsebina = sr.ReadToEnd();
-                    igralci = JsonSerializer.Deserialize<List<Igralec>>(vsebina);
+                    string[] podatki = vrstica.Trim().Split(',');
+                    Igralec igralec = new Igralec(podatki[0], int.Parse(podatki[1]));
+                    igralci.Add(igralec);
+                    vrstica = sr.ReadLine();
                 }
-                igralci.Sort();
-                foreach (Igralec igralec in igralci)
-                {
-                    rezultatiListBox.Items.Add($"{igralec.Ime} {igralec.Tocke}");
-                }
+                sr.Close();
+            }
+            catch (Exception exception) 
+            {
+                Console.WriteLine(exception.Message);
+            }
+            igralci.Sort();
+            foreach (Igralec igralec in igralci)
+            {
+                rezultatiListBox.Items.Add(igralec.ToString());
             }
         }
 

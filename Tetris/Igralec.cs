@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Tetris
 {
     
@@ -36,6 +37,10 @@ namespace Tetris
             if (other.Tocke > this.Tocke) return 1;
             else if (other.Tocke < this.Tocke) return -1;
             else return 0;
+        }
+        public override string ToString() 
+        {
+            return $"{Ime} : {Tocke}";
         }
     }
 }
