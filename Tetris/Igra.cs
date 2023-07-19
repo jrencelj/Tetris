@@ -11,7 +11,11 @@ namespace Tetris
     public class Igra
     {
         private string igralec;
-        private const string pot = @"rezultati.txt";
+        private const string potTezka = @"rezultatiTezka.txt";
+        private const string potLahka = @"rezultatiLahka.txt";
+        private const string potSrednja = @"rezultatiSrednja.txt";
+        private const int STEVILO_KOLON = 15;
+        private const int STEVILO_VRSTIC = 25;
         private int tocke = 0;
         private bool igraKonec = false;
         private Color[,] obmocje;
@@ -68,7 +72,7 @@ namespace Tetris
 
         public void NastaviObmocje()
         {
-            obmocje = new Color[25, 15];
+            obmocje = new Color[STEVILO_VRSTIC, STEVILO_KOLON];
         }
 
         public Oblika PridobiNaslednjoObliko()
@@ -146,7 +150,7 @@ namespace Tetris
         /// <returns>Vrne true/false.</returns>
         public bool polnaVrstica(int vrstica)
         {
-            for (int j = 0; j < 15; j++)
+            for (int j = 0; j < STEVILO_KOLON; j++)
             {
                 if (obmocje[vrstica, j].IsEmpty)
                 {
@@ -161,7 +165,7 @@ namespace Tetris
         /// <param name="vrstica">Indeks polne vrstice.</param>
         public void premakniVrstice(int vrstica)
         {
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < STEVILO_KOLON; i++)
             {
                 for (int j = vrstica; j > 0; j--)
                 {
@@ -175,14 +179,27 @@ namespace Tetris
         /// </summary>
         public void ShraniIgra()
         {
-            if (!File.Exists(pot) && (Tezavnost == "tezka" && Igralec != ""))
+            string pot;
+            if (Tezavnost == "lahka")
+            {
+                pot = potLahka;
+            }
+            else if (Tezavnost == "srednja")
+            {
+                pot = potSrednja;
+            }
+            else
+            {
+                pot = potTezka;
+            }
+            if (!File.Exists(pot) && Igralec != "")
             {
                 using (StreamWriter sw = File.CreateText(pot))
                 {
-                    sw.WriteLine($"{Igralec},{Tocke}");
+                    sw.WriteLine($"{Igralec}\t{Tocke}\t{DateTime.Now}");
                 }
             }
-            else if (File.Exists(pot) && (Tezavnost == "tezka" && Igralec != ""))
+            else if (File.Exists(pot) &&  Igralec != "")
             {
                 List<Igralec> igralci = new List<Igralec>();
                 using (StreamReader sr = File.OpenText(pot))
@@ -190,12 +207,12 @@ namespace Tetris
                     string vrstica = "";
                     while ((vrstica = sr.ReadLine()) != null)
                     {
-                        string[] podatki = vrstica.Trim().Split(',');
-                        Igralec igralec = new Igralec(podatki[0], int.Parse(podatki[1]));
+                        string[] podatki = vrstica.Trim().Split('\t');
+                        Igralec igralec = new Igralec(podatki[0], int.Parse(podatki[1]), DateTime.Parse(podatki[2]));
                         igralci.Add(igralec);
                     }
                 }
-                igralci.Add(new Igralec(Igralec, Tocke));
+                igralci.Add(new Igralec(Igralec, Tocke, DateTime.Now));
                 igralci.Sort();
                 if (igralci.Count < 10)
                 {
@@ -203,7 +220,7 @@ namespace Tetris
                     {
                         foreach (Igralec igralec in igralci)
                         {
-                            sw.WriteLine($"{igralec.Ime},{igralec.Tocke}");
+                            sw.WriteLine(igralec.ToString());
                         }
                     }
                 }
@@ -215,7 +232,7 @@ namespace Tetris
                         while (stevec < 10)
                         {
                             Igralec igralec = igralci[stevec];
-                            sw.WriteLine($"{igralec.Ime},{igralec.Tocke}");
+                            sw.WriteLine(igralec.ToString());
                             stevec++;
                         }
                     }
@@ -227,7 +244,7 @@ namespace Tetris
         /// </summary>
         public void odstraniPolneVrstice()
         {
-            for (int vrstica = 24; vrstica >= 0; vrstica--)
+            for (int vrstica = STEVILO_VRSTIC - 1; vrstica >= 0; vrstica--)
             {
                 if (polnaVrstica(vrstica))
                 {

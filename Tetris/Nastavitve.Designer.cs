@@ -31,8 +31,8 @@
             this.pricniButton = new System.Windows.Forms.Button();
             this.lahkaRB = new System.Windows.Forms.RadioButton();
             this.tezavnostGB = new System.Windows.Forms.GroupBox();
-            this.srednjaRB = new System.Windows.Forms.RadioButton();
             this.tezkaRB = new System.Windows.Forms.RadioButton();
+            this.srednjaRB = new System.Windows.Forms.RadioButton();
             this.uporabnikTextBox = new System.Windows.Forms.TextBox();
             this.uporabniskoImeLbl = new System.Windows.Forms.Label();
             this.tezavnostGB.SuspendLayout();
@@ -60,7 +60,6 @@
             this.lahkaRB.TabStop = true;
             this.lahkaRB.Text = "Lahka";
             this.lahkaRB.UseVisualStyleBackColor = true;
-            this.lahkaRB.CheckedChanged += new System.EventHandler(this.OnemogociUpLahka);
             // 
             // tezavnostGB
             // 
@@ -75,17 +74,6 @@
             this.tezavnostGB.TabStop = false;
             this.tezavnostGB.Text = "Težavnost";
             // 
-            // srednjaRB
-            // 
-            this.srednjaRB.AutoSize = true;
-            this.srednjaRB.Location = new System.Drawing.Point(19, 55);
-            this.srednjaRB.Name = "srednjaRB";
-            this.srednjaRB.Size = new System.Drawing.Size(89, 24);
-            this.srednjaRB.TabIndex = 3;
-            this.srednjaRB.Text = "Srednja";
-            this.srednjaRB.UseVisualStyleBackColor = true;
-            this.srednjaRB.CheckedChanged += new System.EventHandler(this.OnemogociUpSrednja);
-            // 
             // tezkaRB
             // 
             this.tezkaRB.AutoSize = true;
@@ -95,11 +83,19 @@
             this.tezkaRB.TabIndex = 4;
             this.tezkaRB.Text = "Težka";
             this.tezkaRB.UseVisualStyleBackColor = true;
-            this.tezkaRB.CheckedChanged += new System.EventHandler(this.OmogociUporabnika);
+            // 
+            // srednjaRB
+            // 
+            this.srednjaRB.AutoSize = true;
+            this.srednjaRB.Location = new System.Drawing.Point(19, 55);
+            this.srednjaRB.Name = "srednjaRB";
+            this.srednjaRB.Size = new System.Drawing.Size(89, 24);
+            this.srednjaRB.TabIndex = 3;
+            this.srednjaRB.Text = "Srednja";
+            this.srednjaRB.UseVisualStyleBackColor = true;
             // 
             // uporabnikTextBox
             // 
-            this.uporabnikTextBox.Enabled = false;
             this.uporabnikTextBox.Location = new System.Drawing.Point(409, 240);
             this.uporabnikTextBox.Name = "uporabnikTextBox";
             this.uporabnikTextBox.Size = new System.Drawing.Size(200, 26);

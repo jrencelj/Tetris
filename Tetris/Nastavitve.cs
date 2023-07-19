@@ -25,39 +25,34 @@ namespace Tetris
         }
         private void PricniIgro(object sender, MouseEventArgs e)
         {
-            OknoIgra oknoIgra = new OknoIgra();
-            oknoIgra.Igra = Igra;
-            oknoIgra.Igra.Igralec = uporabnikTextBox.Text;
-            if (lahkaRB.Checked) 
+            if (uporabnikTextBox.Text != "")
             {
-                oknoIgra.Igra.Tezavnost = "lahka";
-            }
-            else if (srednjaRB.Checked) 
-            {
-                oknoIgra.Igra.Tezavnost = "srednja";
+                OknoIgra oknoIgra = new OknoIgra();
+                oknoIgra.Igra = Igra;
+                oknoIgra.Igra.Igralec = uporabnikTextBox.Text;
+                if (lahkaRB.Checked)
+                {
+                    oknoIgra.Igra.Tezavnost = "lahka";
+                }
+                else if (srednjaRB.Checked)
+                {
+                    oknoIgra.Igra.Tezavnost = "srednja";
+                }
+                else
+                {
+                    oknoIgra.Igra.Tezavnost = "tezka";
+                }
+                oknoIgra.NastaviCas(oknoIgra.Igra.Tezavnost);
+                oknoIgra.Show();
+                Close();
             }
             else
             {
-                oknoIgra.Igra.Tezavnost = "tezka";
+                string sporocilo = "Prosim vnesite uporabnipko ime!";
+                string naslov = "POZOR";
+                MessageBoxButtons gumb = MessageBoxButtons.OK;
+                DialogResult odziv = MessageBox.Show(sporocilo, naslov, gumb);
             }
-            oknoIgra.NastaviCas(oknoIgra.Igra.Tezavnost);
-            oknoIgra.Show();
-            Close();
-        }
-
-        private void OmogociUporabnika(object sender, EventArgs e)
-        {
-            uporabnikTextBox.Enabled = true;
-        }
-
-        private void OnemogociUpLahka(object sender, EventArgs e)
-        {
-            uporabnikTextBox.Enabled = false;
-        }
-
-        private void OnemogociUpSrednja(object sender, EventArgs e)
-        {
-            uporabnikTextBox.Enabled = false;
         }
     }
 }

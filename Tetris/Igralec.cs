@@ -12,10 +12,17 @@ namespace Tetris
     {
         private string ime;
         private int tocke;
-        public Igralec(string ime, int tocke)
+        private DateTime cas;
+        public Igralec(string ime, int tocke, DateTime cas)
         {
             Ime = ime;
             Tocke = tocke;
+            Cas = cas;
+        }
+        public DateTime Cas
+        {
+            get { return cas; } 
+            set { cas = value; } 
         }
         public string Ime
         {
@@ -34,13 +41,37 @@ namespace Tetris
         /// <returns></returns>
         public int CompareTo(Igralec other) 
         {
-            if (other.Tocke > this.Tocke) return 1;
-            else if (other.Tocke < this.Tocke) return -1;
-            else return 0;
+            if (other.Tocke > this.Tocke)
+            {
+                return 1;
+            }
+            else if (other.Tocke < this.Tocke)
+            {
+                return -1;
+            }
+            else
+            {
+                if (other.Tocke == this.Tocke)
+                {
+                    if (other.Cas > this.Cas)
+                    {
+                        return 1;
+                    }
+                    else if (other.Cas < this.Cas)
+                    {
+                        return -1;
+                    }
+                    else 
+                    {
+                        return 0;
+                    }
+                }
+                return 0;
+            }
         }
         public override string ToString() 
         {
-            return $"{Ime} : {Tocke}";
+            return $"{Ime}\t{Tocke}\t{Cas}";
         }
     }
 }

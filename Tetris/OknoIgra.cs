@@ -135,6 +135,7 @@ namespace Tetris
         /// <param name="tezavnost">Težavnost igre (lahka, srednja, tezka).</param>
         public void NastaviCas(string tezavnost)
         {
+            tezavnostLabel.Text = $"Težavnost = {tezavnost.ToUpperInvariant()}";
             if (tezavnost == "lahka")
                 Cas.Interval = 500;
             else
@@ -169,7 +170,7 @@ namespace Tetris
                         igra.odstraniPolneVrstice(); // Odstranimo polne.
                         rezultatLabel.Text = $"Rezultat: {igra.Tocke}";
                         premik = false; // Oblika je na končnem mestu.
-                        Cas.Interval = 200; // Ponastavimo interval padanja.
+                        NastaviCas(igra.Tezavnost); // Ponastavimo interval padanja.
                         if (igra.IgraKonec)
                         {
                             Cas.Stop();
@@ -275,10 +276,12 @@ namespace Tetris
             if (Cas.Enabled)
             {
                 Cas.Stop();
+                pauseButton.Text = "Nadaljuj";
             }
             else
             {
                 Cas.Start();
+                pauseButton.Text = "Ustavi";
             }
         }
 
